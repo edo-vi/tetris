@@ -1,0 +1,6 @@
+.idea/*
+cmake-build-debug/*
+CMakeCache.txt
+Makefile
+tetris
+tetris.cbp

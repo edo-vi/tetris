@@ -31,6 +31,8 @@ time.h
 -
 poll.h
 -
+pthread.h
+-
 screen.h
 /home/edoardo/cl/tetris/screen.h
 game.h

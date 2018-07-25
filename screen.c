@@ -40,25 +40,19 @@ void init_screen_tetris(struct screen_options* sco, struct screen_state* scs) {
         sco->board_dim_y=SMALL_Y;
         sco->dimension=1;
         board=malloc(sizeof(int)*SMALL_Y*SMALL_X);
-        for(int i=0;i<SMALL_Y*SMALL_X;i++) {
-            *(board+i)=0;
-        }
+
     } else if (dimension=='2') {
         sco->board_dim_x=MEDIUM_X;
         sco->board_dim_y=MEDIUM_Y;
         sco->dimension=2;
         board=malloc(sizeof(int)*MEDIUM_Y*MEDIUM_X);
-        for(int i=0;i<MEDIUM_Y*MEDIUM_X;i++) {
-            *(board+i)=0;
-        }
+
     } else {
         sco->board_dim_x=LARGE_X;
         sco->board_dim_y=LARGE_Y;
         sco->dimension=3;
         board=malloc(sizeof(int)*LARGE_Y*LARGE_X);
-        for(int i=0;i<LARGE_Y*LARGE_X;i++) {
-            *(board+i)=0;
-        }
+
     }
     sco->border="||";
     // init active_board
