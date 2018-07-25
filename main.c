@@ -3,11 +3,15 @@
 #include <unistd.h>
 #include <curses.h>
 #include <time.h>
+#include <poll.h>
 #include "screen.h"
+#include "game.h"
 
 int main(void) {
-    struct screen_state screen;
-    init_screen_tetris(&screen);
+    struct game_state gs;
+
+    start_game(&gs);
+
 
     int i =0;
 
@@ -16,15 +20,28 @@ int main(void) {
     time_to_sleep.tv_sec=0;
     time_to_sleep.tv_nsec=(long)700000000;
 
-    while (i<5) {
+
+    while (1) {
 
 
         printf("\033c");
-        draw_screen_tetris(&screen);
+
+        draw_screen_tetris(&gs.sco,&gs.scs);
+
+        initscr();
+        keypad(stdscr, TRUE);
+        halfdelay(7);
+        int ch=getch();
+
+        endwin();
 
 
-        nanosleep(&time_to_sleep,&second_time);
         printf("\033c");
+
+        if (ch==101) break;
+        else if (ch==258) move_active_block_down(&gs.sco, &gs.scs);
+        else if (ch==261) move_active_block_right(&gs.sco, &gs.scs);
+        else move_active_block_down(&gs.sco, &gs.scs);
         i++;
     }
 

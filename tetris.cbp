@@ -66,6 +66,12 @@
 				</MakeCommands>
 			</Target>
 		</Build>
+		<Unit filename="/home/edoardo/cl/tetris/game.c">
+			<Option target="tetris"/>
+		</Unit>
+		<Unit filename="/home/edoardo/cl/tetris/game.h">
+			<Option target="tetris"/>
+		</Unit>
 		<Unit filename="/home/edoardo/cl/tetris/main.c">
 			<Option target="tetris"/>
 		</Unit>

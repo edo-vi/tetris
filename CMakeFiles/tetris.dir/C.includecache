@@ -6,6 +6,20 @@
 
 #IncludeRegexTransform: 
 
+/home/edoardo/cl/tetris/game.c
+stdlib.h
+-
+stdio.h
+-
+screen.h
+/home/edoardo/cl/tetris/screen.h
+game.h
+/home/edoardo/cl/tetris/game.h
+
+/home/edoardo/cl/tetris/game.h
+screen.h
+/home/edoardo/cl/tetris/screen.h
+
 /home/edoardo/cl/tetris/main.c
 stdlib.h
 -
@@ -15,11 +29,17 @@ curses.h
 -
 time.h
 -
+poll.h
+-
 screen.h
 /home/edoardo/cl/tetris/screen.h
+game.h
+/home/edoardo/cl/tetris/game.h
 
 /home/edoardo/cl/tetris/screen.c
 stdio.h
+-
+stdlib.h
 -
 screen.h
 /home/edoardo/cl/tetris/screen.h

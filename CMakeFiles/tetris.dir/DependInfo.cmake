@@ -4,6 +4,7 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_C
+  "/home/edoardo/cl/tetris/game.c" "/home/edoardo/cl/tetris/CMakeFiles/tetris.dir/game.c.o"
   "/home/edoardo/cl/tetris/main.c" "/home/edoardo/cl/tetris/CMakeFiles/tetris.dir/main.c.o"
   "/home/edoardo/cl/tetris/screen.c" "/home/edoardo/cl/tetris/CMakeFiles/tetris.dir/screen.c.o"
   )
