@@ -1,0 +1,20 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/edoardo/cl/tetris/main.c
+stdlib.h
+-
+unistd.h
+-
+curses.h
+-
+time.h
+-
+
+/home/edoardo/cl/tetris/screen.c
+
