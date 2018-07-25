@@ -15,6 +15,14 @@ curses.h
 -
 time.h
 -
+screen.h
+/home/edoardo/cl/tetris/screen.h
 
 /home/edoardo/cl/tetris/screen.c
+stdio.h
+-
+screen.h
+/home/edoardo/cl/tetris/screen.h
+
+/home/edoardo/cl/tetris/screen.h
 

@@ -72,6 +72,9 @@
 		<Unit filename="/home/edoardo/cl/tetris/screen.c">
 			<Option target="tetris"/>
 		</Unit>
+		<Unit filename="/home/edoardo/cl/tetris/screen.h">
+			<Option target="tetris"/>
+		</Unit>
 		<Unit filename="/home/edoardo/cl/tetris/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\"/>
 		</Unit>
