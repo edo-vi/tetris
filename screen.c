@@ -58,3 +58,9 @@ void init_screen_tetris(struct screen_options* sco, struct screen_state* scs) {
     // init active_board
     scs->active_board=board;
 }
+
+void clear_active_board(int previous_pos[4], struct screen_state* scs) {
+    for(int i=0; i<4; i++) {
+        *(scs->active_board+previous_pos[i])=0;
+    }
+}

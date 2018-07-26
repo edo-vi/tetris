@@ -24,5 +24,5 @@ struct screen_options{
 
 void draw_screen_tetris(struct screen_options* sco, struct screen_state* scs);
 void init_screen_tetris(struct screen_options* sco, struct screen_state* scs);
-
+void clear_active_board(int previous_pos[4], struct screen_state* scs);
 #endif //TETRIS_SCREEN_H

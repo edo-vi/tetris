@@ -28,7 +28,7 @@ void *move_block_down_periodically(void *arg) {
             must_delay_thread=0;
             continue;
         }
-        move_active_block_down(&gs.sco, &gs.scs);
+        move_active_block_down(&gs.sco, &gs.scs, &gs.bls);
     }
 }
 
@@ -57,9 +57,13 @@ int main(void) {
 
         if (ch==258) {
             must_delay_thread=1;
-            move_active_block_down(&gs.sco, &gs.scs);
+            move_active_block_down(&gs.sco, &gs.scs, &gs.bls);
         }
-        else if (ch==261) move_active_block_right(&gs.sco, &gs.scs);
+        else if (ch==261) {
+            move_active_block_right(&gs.sco, &gs.scs,&gs.bls);
+        } else if (ch==260) {
+            move_active_block_left(&gs.sco, &gs.scs,&gs.bls);
+        }
 
     } while(ch!=101);
     printf("\033c");

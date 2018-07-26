@@ -17,29 +17,40 @@ void start_game(struct game_state* gs) {
 }
 
 void init_board_state(struct screen_options* sco, struct screen_state* scs, struct blocks_state* bls) {
-
+    collocate_block_initial_position(bls,sco);
+    map_active_state_to_board(scs,bls->active->normalized_pos);
 }
 
-
-void move_active_block_down(struct screen_options *sco, struct screen_state *scs) {
-    int dim_x = sco->board_dim_x;
-    int dim_y = sco->board_dim_y;
-    for (int i = (dim_x*dim_y)-1;i>0; i--) {
-        if(*(scs->active_board+i)==1) {
-            *(scs->active_board+i)=0;
-            int new_row=(i/dim_x)+1; // i/dim_x is the old row
-            int offset=i%dim_x;
-            *(scs->active_board+(new_row*dim_x+offset))=1; // update board with 1 in next row
-        }
+void map_active_state_to_board(struct screen_state* scs, int active_block_position[4]) {
+    for (int i=0;i<4;i++) {
+        *(scs->active_board+active_block_position[i])=1;
     }
 }
-void move_active_block_right(struct screen_options *sco, struct screen_state *scs) {
-    int dim_x = sco->board_dim_x;
-    int dim_y = sco->board_dim_y;
-    for (int i = (dim_x*dim_y)-1;i>0; i--) {
-        if(*(scs->active_board+i)==1) {
-            *(scs->active_board+i)=0;
-            *(scs->active_board+i+1)=1;
-        }
+void move_active_block_down(struct screen_options *sco, struct screen_state *scs, struct blocks_state* bls) {
+    clear_active_board(bls->active->normalized_pos,scs);
+    for(int i=0;i<4;i++) {
+        bls->active->pos[i][1]++;
     }
+    convert_pos_to_normalized_pos(bls->active->pos, bls->active->normalized_pos, sco->board_dim_x);
+
+    map_active_state_to_board(scs, bls->active->normalized_pos);
+}
+void move_active_block_right(struct screen_options *sco, struct screen_state *scs, struct blocks_state* bls) {
+    clear_active_board(bls->active->normalized_pos,scs);
+    for(int i=0;i<4;i++) {
+        bls->active->pos[i][0]++;
+    }
+    convert_pos_to_normalized_pos(bls->active->pos, bls->active->normalized_pos, sco->board_dim_x);
+
+    map_active_state_to_board(scs, bls->active->normalized_pos);
+}
+
+void move_active_block_left(struct screen_options *sco, struct screen_state *scs, struct blocks_state* bls) {
+    clear_active_board(bls->active->normalized_pos,scs);
+    for(int i=0;i<4;i++) {
+        bls->active->pos[i][0]--;
+    }
+    convert_pos_to_normalized_pos(bls->active->pos, bls->active->normalized_pos, sco->board_dim_x);
+
+    map_active_state_to_board(scs, bls->active->normalized_pos);
 }
