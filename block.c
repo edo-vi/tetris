@@ -25,8 +25,15 @@ struct block* create_random_block(void) {
             randblock->type=z; break;
         default: randblock->type = square;
     }
-    randblock->style='*'; //TODO change if want different style
+    randblock->style='+'; //TODO change if want different style
     return randblock;
+}
+void init_finished_blocks(struct screen_options* sco, struct blocks_state* bls) {
+    int dimension = sco->board_dim_x*sco->board_dim_y;
+    bls->dimension_finished_blocks=dimension;
+    bls->finished_blocks=malloc(sizeof(int)*dimension);
+
+
 }
 void collocate_block_initial_position(struct blocks_state* bls, struct screen_options* sco) {
     struct block* newblock = create_random_block();
@@ -72,7 +79,7 @@ void collocate_block_initial_position(struct blocks_state* bls, struct screen_op
         newactiveblock->pos[2][1]=2;
 
         newactiveblock->pos[3][0]=initial_x+1;
-        newactiveblock->pos[3][1]=3;
+        newactiveblock->pos[3][1]=2;
     } else if (newblock->type==j) {
         newactiveblock->pos[0][0] = initial_x;
         newactiveblock->pos[0][1] = 0;
@@ -84,7 +91,7 @@ void collocate_block_initial_position(struct blocks_state* bls, struct screen_op
         newactiveblock->pos[2][1] = 2;
 
         newactiveblock->pos[3][0] = initial_x - 1;
-        newactiveblock->pos[3][1] = 3;
+        newactiveblock->pos[3][1] = 2;
     } else if (newblock->type==t) {
         newactiveblock->pos[0][0] = initial_x;
         newactiveblock->pos[0][1] = 0;
@@ -131,6 +138,15 @@ void convert_pos_to_normalized_pos(int pos[4][2], int normalized_pos[4], int pos
     for (int i=0; i<4; i++) {
         normalized_pos[i]=pos[i][0]+(pos_x*pos[i][1]);
     }
+}
+
+void end_active_block_life(struct blocks_state *bls, struct screen_options *sco) {
+    struct active_block* active=bls->active;
+    for (int i=0;i<4;i++) {
+        *(bls->finished_blocks+active->normalized_pos[i])=1;
+    }
+    clear_active_block(active);
+    collocate_block_initial_position(bls,sco);
 }
 
 void clear_active_block(struct active_block* acb) {

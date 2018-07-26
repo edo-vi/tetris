@@ -16,10 +16,7 @@ void draw_screen_tetris(struct screen_options* sco, struct screen_state* scs) {
     for (int i=0;i<sco->board_dim_y;i++) {
         printf("%s",sco->border);
         for (int j=0; j<sco->board_dim_x;j++) {
-           if(i==sco->board_dim_y-1) {
-               printf("_");
-           }
-           else if(*(scs->active_board+(i*sco->board_dim_x+j))==1 ) {
+           if(*(scs->active_board+(i*sco->board_dim_x+j))==1 ) {
                printf("*");
            } else {
                printf(" ");
@@ -27,6 +24,11 @@ void draw_screen_tetris(struct screen_options* sco, struct screen_state* scs) {
         }
         printf("%s\n",sco->border);
     }
+
+    for (int k=0;k<sco->board_dim_x+4;k++) {
+        printf("=");
+    }
+    printf("\n");
 }
 void init_screen_tetris(struct screen_options* sco, struct screen_state* scs) {
     char dimension;
