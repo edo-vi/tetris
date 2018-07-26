@@ -9,7 +9,9 @@
 #include "screen.h"
 #include "game.h"
 
-
+/*
+ * GLOBALS
+ */
 struct game_state gs;
 int must_delay_thread=0;
 
@@ -32,16 +34,14 @@ void *move_block_down_periodically(void *arg) {
 
 int main(void) {
 
+    srand(time(NULL));
 
     start_game(&gs);
 
-
-    int i =0;
-
     pthread_t tid;
     pthread_create(&tid, NULL, &move_block_down_periodically, NULL);
-
-    while (1) {
+    int ch;
+    do {
 
         printf("\033c");
 
@@ -50,24 +50,18 @@ int main(void) {
         initscr();
         keypad(stdscr, TRUE);
         halfdelay(7);
-        int ch=getch();
+
+        ch=getch();
 
         endwin();
 
-
-        if (ch==101) {
-            printf("\033c");
-            break;
-        }
-        else if (ch==258) {
+        if (ch==258) {
             must_delay_thread=1;
             move_active_block_down(&gs.sco, &gs.scs);
         }
         else if (ch==261) move_active_block_right(&gs.sco, &gs.scs);
 
-
-
-    }
-
+    } while(ch!=101);
+    printf("\033c");
     return 0;
 }
