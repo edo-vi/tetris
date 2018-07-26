@@ -9,15 +9,15 @@
 
 struct block* create_random_block(void) {
     struct block* randblock = malloc(sizeof(struct block));
-    switch(4) { //switch(rand()%7)
+    switch(rand()%2) {
         case 0:
-            randblock->type=i; break;
-        case 1:
-            randblock->type=square; break;
-        case 2:
             randblock->type=l; break;
-        case 3:
+        case 1:
             randblock->type=j; break;
+        case 2:
+            randblock->type=i; break;
+        case 3:
+            randblock->type=square; break;
         case 4:
             randblock->type=t; break;
         case 5:
@@ -140,7 +140,7 @@ void convert_pos_to_normalized_pos(int pos[4][2], int normalized_pos[4], int pos
 }
 
 void end_active_block_life(struct blocks_state *bls, struct screen_options *sco, struct screen_state *scs) {
-    clear_active_board(bls->active->normalized_pos,scs);
+
     struct active_block* active=bls->active;
     for (int i=0;i<4;i++) {
         *(bls->completed_blocks+active->normalized_pos[i])=1;

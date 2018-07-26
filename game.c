@@ -37,6 +37,7 @@ void map_completed_blocks_to_board(struct screen_state* scs, struct blocks_state
 }
 void move_active_block_down(struct screen_options *sco, struct screen_state *scs, struct blocks_state* bls) {
     if (hit_on_bottom(bls, sco->board_dim_y, sco->board_dim_x)) {
+        clear_active_board(bls->active->normalized_pos,scs);
         end_active_block_life(bls, sco, scs); // if is near bottom
         return;
     }
