@@ -6,8 +6,9 @@
 #include <poll.h>
 #include <pthread.h>
 
-#include "screen.h"
 #include "game.h"
+#include "screen.h"
+
 
 /*
  * GLOBALS
@@ -45,7 +46,7 @@ int main(void) {
 
         printf("\033c");
 
-        draw_screen_tetris(&gs.sco,&gs.scs);
+        draw_screen_tetris(&gs.sco, &gs.scs, &gs.bls);
 
         initscr();
         keypad(stdscr, TRUE);

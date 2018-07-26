@@ -4,11 +4,12 @@
 
 #include <stdlib.h>
 #include "block.h"
+#include "game.h"
 #include "screen.h"
 
 struct block* create_random_block(void) {
     struct block* randblock = malloc(sizeof(struct block));
-    switch(rand()%7) {
+    switch(4) { //switch(rand()%7)
         case 0:
             randblock->type=i; break;
         case 1:
@@ -28,12 +29,10 @@ struct block* create_random_block(void) {
     randblock->style='+'; //TODO change if want different style
     return randblock;
 }
-void init_finished_blocks(struct screen_options* sco, struct blocks_state* bls) {
+void init_completed_blocks(struct screen_options *sco, struct blocks_state *bls) {
     int dimension = sco->board_dim_x*sco->board_dim_y;
-    bls->dimension_finished_blocks=dimension;
-    bls->finished_blocks=malloc(sizeof(int)*dimension);
-
-
+    bls->dimension_completed_blocks=dimension;
+    bls->completed_blocks=malloc(sizeof(int)*dimension);
 }
 void collocate_block_initial_position(struct blocks_state* bls, struct screen_options* sco) {
     struct block* newblock = create_random_block();
@@ -140,12 +139,14 @@ void convert_pos_to_normalized_pos(int pos[4][2], int normalized_pos[4], int pos
     }
 }
 
-void end_active_block_life(struct blocks_state *bls, struct screen_options *sco) {
+void end_active_block_life(struct blocks_state *bls, struct screen_options *sco, struct screen_state *scs) {
+    clear_active_board(bls->active->normalized_pos,scs);
     struct active_block* active=bls->active;
     for (int i=0;i<4;i++) {
-        *(bls->finished_blocks+active->normalized_pos[i])=1;
+        *(bls->completed_blocks+active->normalized_pos[i])=1;
     }
-    clear_active_block(active);
+    clear_line_if_completed(bls,sco);
+    clear_active_block(bls->active);
     collocate_block_initial_position(bls,sco);
 }
 

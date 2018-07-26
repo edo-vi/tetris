@@ -5,9 +5,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "screen.h"
+#include "game.h"
 
 
-void draw_screen_tetris(struct screen_options* sco, struct screen_state* scs) {
+void draw_screen_tetris(struct screen_options *sco, struct screen_state *scs, struct blocks_state *bls) {
+    map_active_state_to_board(scs, bls->active->normalized_pos);
+    map_completed_blocks_to_board(scs,bls);
     printf("  ");
     for (int k=0;k<sco->board_dim_x;k++) {
         printf("_");
