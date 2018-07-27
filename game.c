@@ -19,7 +19,7 @@ void start_game(struct game_state* gs) {
 
 void init_board_state(struct screen_options* sco, struct screen_state* scs, struct blocks_state* bls) {
     collocate_block_initial_position(bls,sco);
-    map_active_state_to_board(scs,bls->active->normalized_pos);
+    //map_active_state_to_board(scs,bls->active->normalized_pos);
 }
 
 void map_active_state_to_board(struct screen_state* scs, int active_block_position[4]) {
@@ -126,5 +126,5 @@ void clear_line_if_completed(struct blocks_state *bls, struct screen_options *sc
         }
 
     }
-    map_completed_blocks_to_board(scs,bls);
+
 }

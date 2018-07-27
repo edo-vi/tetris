@@ -147,11 +147,11 @@ void end_active_block_life(struct blocks_state *bls, struct screen_options *sco,
         *(bls->completed_blocks+active->normalized_pos[i])=1;
     }
     clear_line_if_completed(bls, sco, scs);
-    clear_active_block(bls->active);
+    free_active_block(bls->active);
     collocate_block_initial_position(bls,sco);
 }
 
-void clear_active_block(struct active_block* acb) {
+void free_active_block(struct active_block *acb) {
     free(acb->block);
     free(acb);
 }
