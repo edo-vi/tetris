@@ -9,7 +9,7 @@
 
 struct block* create_random_block(void) {
     struct block* randblock = malloc(sizeof(struct block));
-    switch(rand()%7) {
+    switch(5/*rand()%7*/) {
         case 0:
             randblock->type=l; break;
         case 1:
@@ -27,8 +27,10 @@ struct block* create_random_block(void) {
         default: randblock->type = square;
     }
     randblock->style='+'; //TODO change if want different style
+    randblock->form=1;
     return randblock;
 }
+
 void init_completed_blocks(struct screen_options *sco, struct blocks_state *bls) {
     int dimension = sco->board_dim_x*sco->board_dim_y;
     bls->dimension_completed_blocks=dimension;
@@ -104,10 +106,10 @@ void collocate_block_initial_position(struct blocks_state* bls, struct screen_op
         newactiveblock->pos[3][0] = initial_x - 1;
         newactiveblock->pos[3][1] = 1;
     } else if (newblock->type==s) {
-        newactiveblock->pos[0][0] = initial_x;
+        newactiveblock->pos[0][0] = initial_x+1; //was initial_x
         newactiveblock->pos[0][1] = 0;
 
-        newactiveblock->pos[1][0] = initial_x+1;
+        newactiveblock->pos[1][0] = initial_x; //was initial_x+1
         newactiveblock->pos[1][1] = 0;
 
         newactiveblock->pos[2][0] = initial_x;
@@ -117,10 +119,10 @@ void collocate_block_initial_position(struct blocks_state* bls, struct screen_op
         newactiveblock->pos[3][1] = 1;
     }
     else if (newblock->type==z) {
-        newactiveblock->pos[0][0] = initial_x;
+        newactiveblock->pos[0][0] = initial_x-1; // was initial x
         newactiveblock->pos[0][1] = 0;
 
-        newactiveblock->pos[1][0] = initial_x-1;
+        newactiveblock->pos[1][0] = initial_x; //was initial_x-1
         newactiveblock->pos[1][1] = 0;
 
         newactiveblock->pos[2][0] = initial_x;
@@ -140,6 +142,332 @@ void convert_pos_to_normalized_pos(int pos[4][2], int normalized_pos[4], int pos
     }
 }
 
+void change_active_block_form(struct screen_options *sco, struct screen_state *scs, struct blocks_state *bls) {
+    struct active_block* ab = bls->active;
+    clear_active_board(ab->normalized_pos,scs);
+    int old_pos_x, old_pos_y;
+    //use second block to create new form
+    old_pos_x=ab->pos[1][0];
+    old_pos_y=ab->pos[1][1];
+    switch(ab->block->type) {
+        case i:
+            if(ab->block->form==1) {
+                ab->block->form=2;
+
+                ab->pos[0][0]=old_pos_x-1;
+                ab->pos[0][1]=old_pos_y;
+
+                //don't touch pos2
+                //ab->pos[0][0]=old_pos_x-1;
+                //ab->pos[0][1]=old_pos_y;
+
+                ab->pos[2][0]=old_pos_x+1;
+                ab->pos[2][1]=old_pos_y;
+
+                ab->pos[3][0]=old_pos_x+2;
+                ab->pos[3][1]=old_pos_y;
+            } else {
+                ab->block->form=1;
+
+                ab->pos[0][0]=old_pos_x;
+                ab->pos[0][1]=old_pos_y-1;
+
+                //don't touch pos2
+                //ab->pos[0][0]=old_pos_x-1;
+                //ab->pos[0][1]=old_pos_y;
+
+                ab->pos[2][0]=old_pos_x;
+                ab->pos[2][1]=old_pos_y+1;
+
+                ab->pos[3][0]=old_pos_x;
+                ab->pos[3][1]=old_pos_y+2;
+            }
+            break;
+        case l:
+            if(ab->block->form==1) {
+                ab->block->form=2;
+
+                ab->pos[0][0]=old_pos_x-1;
+                ab->pos[0][1]=old_pos_y;
+
+                //don't touch pos2
+                //ab->pos[0][0]=old_pos_x-1;
+                //ab->pos[0][1]=old_pos_y;
+
+                ab->pos[2][0]=old_pos_x+1;
+                ab->pos[2][1]=old_pos_y;
+
+                ab->pos[3][0]=old_pos_x+1;
+                ab->pos[3][1]=old_pos_y-1;
+            } else if (ab->block->form==2) {
+                ab->block->form=3;
+
+                ab->pos[0][0]=old_pos_x;
+                ab->pos[0][1]=old_pos_y+1;
+
+                //don't touch pos2
+                //ab->pos[0][0]=old_pos_x-1;
+                //ab->pos[0][1]=old_pos_y;
+
+                ab->pos[2][0]=old_pos_x;
+                ab->pos[2][1]=old_pos_y-1;
+
+                ab->pos[3][0]=old_pos_x-1;
+                ab->pos[3][1]=old_pos_y-1;
+            } else if (ab->block->form==3) {
+                ab->block->form = 4;
+
+                ab->pos[0][0] = old_pos_x+1;
+                ab->pos[0][1] = old_pos_y;
+
+                //don't touch pos2
+                //ab->pos[0][0]=old_pos_x-1;
+                //ab->pos[0][1]=old_pos_y;
+
+                ab->pos[2][0] = old_pos_x-1;
+                ab->pos[2][1] = old_pos_y;
+
+                ab->pos[3][0] = old_pos_x-1;
+                ab->pos[3][1] = old_pos_y + 1;
+            } else {
+                ab->block->form = 1;
+
+                ab->pos[0][0] = old_pos_x;
+                ab->pos[0][1] = old_pos_y - 1;
+
+                //don't touch pos2
+                //ab->pos[0][0]=old_pos_x-1;
+                //ab->pos[0][1]=old_pos_y;
+
+                ab->pos[2][0] = old_pos_x;
+                ab->pos[2][1] = old_pos_y + 1;
+
+                ab->pos[3][0] = old_pos_x+1;
+                ab->pos[3][1] = old_pos_y + 1;
+            }
+            break;
+        case j:
+            if(ab->block->form==1) {
+                ab->block->form=2;
+
+                ab->pos[0][0]=old_pos_x-1;
+                ab->pos[0][1]=old_pos_y;
+
+                //don't touch pos2
+                //ab->pos[0][0]=old_pos_x-1;
+                //ab->pos[0][1]=old_pos_y;
+
+                ab->pos[2][0]=old_pos_x+1;
+                ab->pos[2][1]=old_pos_y;
+
+                ab->pos[3][0]=old_pos_x+1;
+                ab->pos[3][1]=old_pos_y+1;
+            } else if (ab->block->form==2) {
+                ab->block->form=3;
+
+                ab->pos[0][0]=old_pos_x;
+                ab->pos[0][1]=old_pos_y+1;
+
+                //don't touch pos2
+                //ab->pos[0][0]=old_pos_x-1;
+                //ab->pos[0][1]=old_pos_y;
+
+                ab->pos[2][0]=old_pos_x;
+                ab->pos[2][1]=old_pos_y-1;
+
+                ab->pos[3][0]=old_pos_x+1;
+                ab->pos[3][1]=old_pos_y-1;
+            } else if (ab->block->form==3) {
+                ab->block->form = 4;
+
+                ab->pos[0][0] = old_pos_x+1;
+                ab->pos[0][1] = old_pos_y;
+
+                //don't touch pos2
+                //ab->pos[0][0]=old_pos_x-1;
+                //ab->pos[0][1]=old_pos_y;
+
+                ab->pos[2][0] = old_pos_x-1;
+                ab->pos[2][1] = old_pos_y;
+
+                ab->pos[3][0] = old_pos_x-1;
+                ab->pos[3][1] = old_pos_y - 1;
+            } else {
+                ab->block->form = 1;
+
+                ab->pos[0][0] = old_pos_x;
+                ab->pos[0][1] = old_pos_y - 1;
+
+                //don't touch pos2
+                //ab->pos[0][0]=old_pos_x-1;
+                //ab->pos[0][1]=old_pos_y;
+
+                ab->pos[2][0] = old_pos_x;
+                ab->pos[2][1] = old_pos_y + 1;
+
+                ab->pos[3][0] = old_pos_x-1;
+                ab->pos[3][1] = old_pos_y + 1;
+            }
+            break;
+        case t:
+            if(ab->block->form==1) {
+                ab->block->form=2;
+
+                ab->pos[0][0]=old_pos_x;
+                ab->pos[0][1]=old_pos_y-1;
+
+                //don't touch pos2
+                //ab->pos[0][0]=old_pos_x-1;
+                //ab->pos[0][1]=old_pos_y;
+
+                ab->pos[2][0]=old_pos_x-1;
+                ab->pos[2][1]=old_pos_y;
+
+                ab->pos[3][0]=old_pos_x;
+                ab->pos[3][1]=old_pos_y+1;
+            } else if (ab->block->form==2) {
+                ab->block->form=3;
+
+                ab->pos[0][0]=old_pos_x-1;
+                ab->pos[0][1]=old_pos_y;
+
+                //don't touch pos2
+                //ab->pos[0][0]=old_pos_x-1;
+                //ab->pos[0][1]=old_pos_y;
+
+                ab->pos[2][0]=old_pos_x;
+                ab->pos[2][1]=old_pos_y+1;
+
+                ab->pos[3][0]=old_pos_x+1;
+                ab->pos[3][1]=old_pos_y;
+            } else if (ab->block->form==3) {
+                ab->block->form = 4;
+
+                ab->pos[0][0] = old_pos_x;
+                ab->pos[0][1] = old_pos_y-1;
+
+                //don't touch pos2
+                //ab->pos[0][0]=old_pos_x-1;
+                //ab->pos[0][1]=old_pos_y;
+
+                ab->pos[2][0] = old_pos_x+1;
+                ab->pos[2][1] = old_pos_y;
+
+                ab->pos[3][0] = old_pos_x;
+                ab->pos[3][1] = old_pos_y + 1;
+            } else {
+                ab->block->form = 1;
+
+                ab->pos[0][0] = old_pos_x-1;
+                ab->pos[0][1] = old_pos_y;
+
+                //don't touch pos2
+                //ab->pos[0][0]=old_pos_x-1;
+                //ab->pos[0][1]=old_pos_y;
+
+                ab->pos[2][0] = old_pos_x;
+                ab->pos[2][1] = old_pos_y - 1;
+
+                ab->pos[3][0] = old_pos_x+1;
+                ab->pos[3][1] = old_pos_y;
+            }
+            break;
+        case s:
+            if(ab->block->form==1) {
+                ab->block->form=2;
+
+                ab->pos[0][0]=old_pos_x;
+                ab->pos[0][1]=old_pos_y;
+
+                ab->pos[1][0]=old_pos_x;
+                ab->pos[1][1]=old_pos_y+1;
+
+                ab->pos[2][0]=old_pos_x+1;
+                ab->pos[2][1]=old_pos_y+1;
+
+                ab->pos[3][0]=old_pos_x+1;
+                ab->pos[3][1]=old_pos_y+2;
+            } else {
+                ab->block->form=1;
+
+                ab->pos[0][0]=old_pos_x+1;
+                ab->pos[0][1]=old_pos_y-1;
+
+                ab->pos[1][0]=old_pos_x;
+                ab->pos[1][1]=old_pos_y-1;
+
+                ab->pos[2][0]=old_pos_x;
+                ab->pos[2][1]=old_pos_y;
+
+                ab->pos[3][0]=old_pos_x-1;
+                ab->pos[3][1]=old_pos_y;
+            }
+            break;
+        case z:
+            if(ab->block->form==1) {
+                ab->block->form=2;
+
+                ab->pos[0][0]=old_pos_x;
+                ab->pos[0][1]=old_pos_y;
+
+                ab->pos[1][0]=old_pos_x;
+                ab->pos[1][1]=old_pos_y+1;
+
+                ab->pos[2][0]=old_pos_x-1;
+                ab->pos[2][1]=old_pos_y+1;
+
+                ab->pos[3][0]=old_pos_x-1;
+                ab->pos[3][1]=old_pos_y+2;
+            } else {
+                ab->block->form=1;
+
+                ab->pos[0][0]=old_pos_x-1;
+                ab->pos[0][1]=old_pos_y-1;
+
+                ab->pos[1][0]=old_pos_x;
+                ab->pos[1][1]=old_pos_y-1;
+
+                ab->pos[2][0]=old_pos_x;
+                ab->pos[2][1]=old_pos_y;
+
+                ab->pos[3][0]=old_pos_x+1;
+                ab->pos[3][1]=old_pos_y;
+            }
+            break;
+    }
+    /*
+     * handling of out of boundary cases
+     */
+
+    // if new block is out of boundary to the left
+    if (ab->pos[0][0]<0 || ab->pos[1][0]<0 || ab->pos[2][0]<0 || ab->pos[3][0]<0) {
+        int min=0;
+        for (int i=0;i<4;i++) {
+            if (ab->pos[i][0]<min) min=ab->pos[i][0];
+        }
+
+        int j=-min;
+        for (int i=0;i<4;i++) {
+            ab->pos[i][0]+=j;
+        }
+    } // if new block is out of boundary to the right
+    else if (ab->pos[0][0]>sco->board_dim_x-1 || ab->pos[1][0]>sco->board_dim_x-1 || ab->pos[2][0]>sco->board_dim_x-1 ||
+             ab->pos[3][0]>sco->board_dim_x-1)
+    {
+        int max=0;
+        for (int i=0;i<4;i++) {
+            if (ab->pos[i][0]>max) max=ab->pos[i][0];
+        }
+        int j=max-sco->board_dim_x+1;
+        for (int i=0;i<4;i++) {
+            ab->pos[i][0]-=j;
+        }
+    }
+    //todo add logic to check collision with completed blocks
+    convert_pos_to_normalized_pos(ab->pos,ab->normalized_pos,sco->board_dim_x);
+
+}
+
 void end_active_block_life(struct blocks_state *bls, struct screen_options *sco, struct screen_state *scs) {
 
     struct active_block* active=bls->active;
@@ -150,6 +478,7 @@ void end_active_block_life(struct blocks_state *bls, struct screen_options *sco,
     free_active_block(bls->active);
     collocate_block_initial_position(bls,sco);
 }
+
 
 void free_active_block(struct active_block *acb) {
     free(acb->block);

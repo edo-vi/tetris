@@ -9,6 +9,7 @@
 struct block{
     enum {i,square,l,j,t,s,z} type;
     char style;
+    int form;
 };
 
 struct active_block{

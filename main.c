@@ -14,13 +14,16 @@
  * GLOBALS
  */
 struct game_state gs;
+
+void change_active_block_form(struct screen_options *sco, struct screen_state *scs, struct blocks_state *bls);
+
 int must_delay_thread=0;
 
 void *move_block_down_periodically(void *arg) {
     struct timespec time_to_sleep;
     struct timespec second_time;
     time_to_sleep.tv_sec = 0;
-    time_to_sleep.tv_nsec = (long) 700000000;
+    time_to_sleep.tv_nsec = (long) 400000000;
 
     while(1) {
 
@@ -64,9 +67,15 @@ int main(void) {
             move_active_block_right(&gs.sco, &gs.scs,&gs.bls);
         } else if (ch==260) {//260
             move_active_block_left(&gs.sco, &gs.scs,&gs.bls);
+        } else if (ch=='w') {
+            must_delay_thread=1;
+            change_active_block_form(&gs.sco, &gs.scs, &gs.bls);
+            draw_screen_tetris(&gs.sco, &gs.scs, &gs.bls);
         }
 
     } while(ch!=101);
     printf("\033c");
     return 0;
 }
+
+
