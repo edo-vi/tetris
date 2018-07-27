@@ -5,10 +5,10 @@
 #ifndef TETRIS_SCREEN_H
 #define TETRIS_SCREEN_H
 
-#define SMALL_X 4 //20
+#define SMALL_X 20 //20
 #define MEDIUM_X 40
 #define LARGE_X 50
-#define SMALL_Y 15 // 15
+#define SMALL_Y 12 // 15
 #define MEDIUM_Y 20
 #define LARGE_Y 20
 
