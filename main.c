@@ -23,7 +23,7 @@ void *move_block_down_periodically(void *arg) {
     struct timespec time_to_sleep;
     struct timespec second_time;
     time_to_sleep.tv_sec = 0;
-    time_to_sleep.tv_nsec = (long) 400000000;
+    time_to_sleep.tv_nsec = (long) 800000000;
 
     while(1) {
 
@@ -53,7 +53,7 @@ int main(void) {
 
         initscr();
         keypad(stdscr, TRUE);
-        halfdelay(7);
+        halfdelay(8);
 
         ch=getch();
 

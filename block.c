@@ -9,7 +9,7 @@
 
 struct block* create_random_block(void) {
     struct block* randblock = malloc(sizeof(struct block));
-    switch(5/*rand()%7*/) {
+    switch(rand()%7) {
         case 0:
             randblock->type=l; break;
         case 1:
@@ -143,8 +143,19 @@ void convert_pos_to_normalized_pos(int pos[4][2], int normalized_pos[4], int pos
 }
 
 void change_active_block_form(struct screen_options *sco, struct screen_state *scs, struct blocks_state *bls) {
-    struct active_block* ab = bls->active;
-    clear_active_board(ab->normalized_pos,scs);
+    // create new identical active_block
+    struct active_block* ab = malloc(sizeof(struct active_block));
+    ab->block=malloc(sizeof(struct block));
+    ab->block->type=bls->active->block->type;
+    ab->block->style=bls->active->block->style;
+    ab->block->form=bls->active->block->form;
+    for (int i=0;i<4;i++) {
+        ab->pos[i][0]=bls->active->pos[i][0];
+        ab->pos[i][1]=bls->active->pos[i][1];
+        ab->normalized_pos[i]=bls->active->normalized_pos[i];
+    }
+
+
     int old_pos_x, old_pos_y;
     //use second block to create new form
     old_pos_x=ab->pos[1][0];
@@ -463,8 +474,32 @@ void change_active_block_form(struct screen_options *sco, struct screen_state *s
             ab->pos[i][0]-=j;
         }
     }
-    //todo add logic to check collision with completed blocks
+    // if new block is out of boundary to the bottom
+    if (ab->pos[0][1]>sco->board_dim_y-1 || ab->pos[1][1]>sco->board_dim_y-1 || ab->pos[2][1]>sco->board_dim_y-1 ||
+             ab->pos[3][1]>sco->board_dim_y-1)
+    {
+        int max=0;
+        for (int i=0;i<4;i++) {
+            if (ab->pos[i][1]>max) max=ab->pos[i][1];
+        }
+        int j=max-sco->board_dim_y+1;
+        for (int i=0;i<4;i++) {
+            ab->pos[i][1]-=j;
+        }
+    }
     convert_pos_to_normalized_pos(ab->pos,ab->normalized_pos,sco->board_dim_x);
+    //todo add logic to check collision with completed blocks
+    for (int i=0;i<4;i++) {
+        if(*(bls->completed_blocks+ab->normalized_pos[i])==1) {
+            free(ab);
+            return;
+        }
+    }
+    clear_active_board(bls->active->normalized_pos,scs);
+    free_active_block(bls->active);
+    bls->active=ab;
+
+
 
 }
 
