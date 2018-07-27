@@ -131,6 +131,7 @@ void collocate_block_initial_position(struct blocks_state* bls, struct screen_op
     }
     convert_pos_to_normalized_pos(newactiveblock->pos,newactiveblock->normalized_pos, pos_x);
     bls->active=newactiveblock;
+
 }
 
 void convert_pos_to_normalized_pos(int pos[4][2], int normalized_pos[4], int pos_x) {
@@ -145,7 +146,7 @@ void end_active_block_life(struct blocks_state *bls, struct screen_options *sco,
     for (int i=0;i<4;i++) {
         *(bls->completed_blocks+active->normalized_pos[i])=1;
     }
-    clear_line_if_completed(bls,sco);
+    clear_line_if_completed(bls, sco, scs);
     clear_active_block(bls->active);
     collocate_block_initial_position(bls,sco);
 }

@@ -98,7 +98,7 @@ int hit_on_right(struct blocks_state *bls, int dim_x) {
     return 0;
 }
 
-void clear_line_if_completed(struct blocks_state* bls, struct screen_options* sco) {
+void clear_line_if_completed(struct blocks_state *bls, struct screen_options *sco, struct screen_state *scs) {
     int max = 0;
     for (int i =0; i<4;i++) {
         if (max<bls->active->normalized_pos[i]) max=bls->active->normalized_pos[i];
@@ -114,6 +114,7 @@ void clear_line_if_completed(struct blocks_state* bls, struct screen_options* sc
     }
 
     if (iscompleted) {
+        clear_completed_blocks(bls->completed_blocks,scs,bls->dimension_completed_blocks);
         for (int k = start; k< start+sco->board_dim_x; k++) {
             *(bls->completed_blocks+k)=0;
         }
@@ -125,4 +126,5 @@ void clear_line_if_completed(struct blocks_state* bls, struct screen_options* sc
         }
 
     }
+    map_completed_blocks_to_board(scs,bls);
 }

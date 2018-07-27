@@ -56,13 +56,13 @@ int main(void) {
 
         endwin();
 
-        if (ch==115) { //258
+        if (ch==258) { //258
             must_delay_thread=1;
             move_active_block_down(&gs.sco, &gs.scs, &gs.bls);
         }
-        else if (ch==100) { //261
+        else if (ch==261) { //261
             move_active_block_right(&gs.sco, &gs.scs,&gs.bls);
-        } else if (ch==97) {//260
+        } else if (ch==260) {//260
             move_active_block_left(&gs.sco, &gs.scs,&gs.bls);
         }
 

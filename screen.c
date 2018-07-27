@@ -69,3 +69,9 @@ void clear_active_board(int previous_pos[4], struct screen_state* scs) {
         *(scs->active_board+previous_pos[i])=0;
     }
 }
+
+void clear_completed_blocks(int* previous_complete_blocks, struct screen_state* scs, int dimension) {
+    for (int i=0;i<dimension;i++) {
+        if (*(previous_complete_blocks+i)==1) *(scs->active_board+i)=0;
+    }
+}

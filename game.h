@@ -19,5 +19,5 @@ void map_completed_blocks_to_board(struct screen_state* scs, struct blocks_state
 int hit_on_bottom(struct blocks_state *bls, int dim_y, int dim_x);
 int hit_on_left(struct blocks_state *bls);
 int hit_on_right(struct blocks_state *bls, int dim_x);
-void clear_line_if_completed(struct blocks_state* bls, struct screen_options* sco);
+void clear_line_if_completed(struct blocks_state *bls, struct screen_options *sco, struct screen_state *scs);
 #endif //TETRIS_GAME_H
