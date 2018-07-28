@@ -488,7 +488,7 @@ void change_active_block_form(struct screen_options *sco, struct screen_state *s
         }
     }
     convert_pos_to_normalized_pos(ab->pos,ab->normalized_pos,sco->board_dim_x);
-    //todo add logic to check collision with completed blocks
+
     for (int i=0;i<4;i++) {
         if(*(bls->completed_blocks+ab->normalized_pos[i])==1) {
             free(ab);
