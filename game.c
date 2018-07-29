@@ -8,6 +8,8 @@
 #include "screen.h"
 #include "block.h"
 
+void sort(int arr[4]);
+
 void start_game(struct game_state* gs) {
     printf("\n********************************\n***          TETRIS          ***\n********************************\n\n"
            " in ogni momento, premi 'e' per\n   uscire e le frecciette per\n       muovere i blocchi\n___________________"
@@ -97,32 +99,65 @@ int hit_on_right(struct blocks_state *bls, int dim_x) {
 }
 
 void clear_line_if_completed(struct blocks_state *bls, struct screen_options *sco, struct screen_state *scs) {
-    int max = 0;
+    //create array of first column position of each row that must be checked
+    int starts[4];
     for (int i =0; i<4;i++) {
-        if (max<bls->active->normalized_pos[i]) max=bls->active->normalized_pos[i];
-    }
-    int row = max/sco->board_dim_x;
-    int start=row*sco->board_dim_x;
-    int iscompleted = 1;
-    for (int j = start; j< start+sco->board_dim_x; j++) {
-        if (*(bls->completed_blocks+j)==0) {
-            iscompleted=0;
-            break;
-        }
+        starts[i]=((bls->active->normalized_pos[i]/sco->board_dim_x)*sco->board_dim_x);
     }
 
-    if (iscompleted) {
-        clear_completed_blocks(bls->completed_blocks,scs,bls->dimension_completed_blocks);
-        for (int k = start; k< start+sco->board_dim_x; k++) {
-            *(bls->completed_blocks+k)=0;
+    //we must order them descending and remove duplicates
+    for (int i=0;i<4;i++) {
+        for(int j=i+1;j<4;j++) {
+            if(starts[i]==starts[j]) starts[i]=-1;
         }
-        for (int l=start-1;l>0;l--) {
-            if (*(bls->completed_blocks+l)==1) {
-                *(bls->completed_blocks+l)=0;
-                *(bls->completed_blocks+l+sco->board_dim_x)=1;
+    }
+    sort(starts);
+
+    // check, from bottom to top, if a line is completed (starts contains the starting position of the rows,
+    // from top to bottom
+    for (int i = 3; i>=0; i-- ) {
+        if (starts[i]<=0) break; // we don't consider invalid starting values, here we break
+                                 // because if we hit -1 then all the others will be the same
+
+        int iscompleted = 1;
+        for (int j = starts[i]; j< starts[i]+sco->board_dim_x; j++) {
+            if (*(bls->completed_blocks+j)==0) {
+                iscompleted=0;
+                break;
             }
         }
+        if (!iscompleted) {
+            continue;
+        }
+        else {
+            clear_completed_blocks(bls->completed_blocks,scs,bls->dimension_completed_blocks);
+            // we increment next starts by dim_x because we lower all blocks by one row, so we must start checking again
+            // in that row (only if we are not at he first element of the array and if that element is not -1
+            for (int j = i; j>0; j--) {
+                if (starts[j-1]>=0) starts[j-1]+=sco->board_dim_x;
+            }
+            for (int k = starts[i]; k< starts[i]+sco->board_dim_x; k++) {
+                *(bls->completed_blocks+k)=0;
+            }
+            for (int l=starts[i]-1;l>0;l--) {
+                if (*(bls->completed_blocks+l)==1) {
+                    *(bls->completed_blocks+l)=0;
+                    *(bls->completed_blocks+l+sco->board_dim_x)=1;
+                }
+            }
 
+        }
     }
-
+}
+//simple selection sort
+void sort(int arr[4]) {
+    for(int i = 2;i>=0;i--) {
+        int j = i;
+        while(j+1<4 && arr[j]>arr[j+1]) {
+            int tmp=arr[j];
+            arr[j]=arr[j+1];
+            arr[j+1]=tmp;
+            j++;
+        }
+    }
 }
