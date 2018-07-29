@@ -15,6 +15,7 @@ void start_game(struct game_state* gs) {
     init_screen_tetris(&gs->sco,&gs->scs);
     init_board_state(&gs->sco,&gs->scs, &gs->bls);
     init_completed_blocks(&gs->sco, &gs->bls); //all zero here, obviously
+    gs->loss=0;
 }
 
 void init_board_state(struct screen_options* sco, struct screen_state* scs, struct blocks_state* bls) {
@@ -34,9 +35,13 @@ void map_completed_blocks_to_board(struct screen_state* scs, struct blocks_state
     }
 
 }
-void move_active_block_down(struct screen_options *sco, struct screen_state *scs, struct blocks_state* bls) {
+void move_active_block_down(struct game_state *gs) {
+    struct blocks_state* bls = &(gs->bls);
+    struct screen_options* sco = &(gs->sco);
+    struct screen_state* scs = &(gs->scs);
+
     if (hit_on_bottom(bls, sco->board_dim_y, sco->board_dim_x)) {
-        end_active_block_life(bls, sco, scs); // if is near bottom
+        end_active_block_life(bls, sco, scs, &(gs->loss)); // if is near bottom
         return;
     }
     clear_active_board(bls->active->normalized_pos,scs);

@@ -32,7 +32,7 @@ void *move_block_down_periodically(void *arg) {
             must_delay_thread=0;
             continue;
         }
-        move_active_block_down(&gs.sco, &gs.scs, &gs.bls);
+        move_active_block_down(&gs);
     }
 }
 
@@ -61,20 +61,21 @@ int main(void) {
 
         if (ch==258) { //258
             must_delay_thread=1;
-            move_active_block_down(&gs.sco, &gs.scs, &gs.bls);
+            move_active_block_down(&gs);
         }
         else if (ch==261) { //261
             move_active_block_right(&gs.sco, &gs.scs,&gs.bls);
         } else if (ch==260) {//260
             move_active_block_left(&gs.sco, &gs.scs,&gs.bls);
-        } else if (ch=='w') {
+        } else if (ch=='w' || ch==259) { //259
             must_delay_thread=1;
             change_active_block_form(&gs.sco, &gs.scs, &gs.bls);
             draw_screen_tetris(&gs.sco, &gs.scs, &gs.bls);
         }
 
-    } while(ch!=101);
+    } while(ch!=101 && gs.loss==0);
     printf("\033c");
+    if (gs.loss>0) printf("Hai perso\n");
     return 0;
 }
 

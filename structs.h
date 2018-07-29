@@ -41,6 +41,7 @@ struct game_state{
     struct screen_options sco;
     struct screen_state scs;
     struct blocks_state bls;
+    int loss;
 };
 
 #endif //TETRIS_STRUCTS_H

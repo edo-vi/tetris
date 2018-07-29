@@ -503,10 +503,11 @@ void change_active_block_form(struct screen_options *sco, struct screen_state *s
 
 }
 
-void end_active_block_life(struct blocks_state *bls, struct screen_options *sco, struct screen_state *scs) {
+void end_active_block_life(struct blocks_state *bls, struct screen_options *sco, struct screen_state *scs, int* loss) {
 
     struct active_block* active=bls->active;
     for (int i=0;i<4;i++) {
+        if ((bls->active->normalized_pos[i]) < sco->board_dim_x*4) *loss=1;
         *(bls->completed_blocks+active->normalized_pos[i])=1;
     }
     clear_line_if_completed(bls, sco, scs);
