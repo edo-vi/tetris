@@ -9,7 +9,7 @@
 
 struct block* create_random_block(void) {
     struct block* randblock = malloc(sizeof(struct block));
-    switch(2/*rand()%7*/) {
+    switch(rand()%7) {
         case 0:
             randblock->type=l; break;
         case 1:
