@@ -7,28 +7,70 @@
 #include "game.h"
 #include "screen.h"
 
+void generate_pseudo_random_type(struct block *bl);
+
+void change_weights(double arr[7], int index, int dimension, float value);
+
 struct block* create_random_block(void) {
     struct block* randblock = malloc(sizeof(struct block));
-    switch(rand()%7) {
-        case 0:
-            randblock->type=l; break;
-        case 1:
-            randblock->type=j; break;
-        case 2:
-            randblock->type=i; break;
-        case 3:
-            randblock->type=square; break;
-        case 4:
-            randblock->type=t; break;
-        case 5:
-            randblock->type=s; break;
-        case 6:
-            randblock->type=z; break;
-        default: randblock->type = square;
-    }
-    randblock->style='+'; //TODO change if want different style
+    generate_pseudo_random_type(randblock);
+    randblock->style=0; //TODO change if want different style
     randblock->form=1;
     return randblock;
+}
+
+void generate_pseudo_random_type(struct block *bl) {
+    int static counter = 0;
+    counter+=1;
+    int std = 4000;
+    int val=rand()%28000;
+
+    // l, j, i, square, t, s, z
+    static double weights[7] = {1,1,1,1,1,1,1};
+    static int cutoffs[7];
+
+    cutoffs[0]=(int)(std*weights[1]);
+    for (int i = 1; i<7;i++) {
+        cutoffs[i]=(int)(std*weights[i])+cutoffs[i-1];
+    }
+    if (val < cutoffs[0]) {
+        bl->type=l;
+        change_weights(weights,0,7,0.12);
+    } else if (val < cutoffs[1]) {
+        bl->type=j;
+        change_weights(weights,1,7,0.12);
+    } else if (val < cutoffs[2]) {
+        bl->type=i;
+        change_weights(weights,2,7,0.12);
+    } else if (val < cutoffs[3]) {
+        bl->type=square;
+        change_weights(weights,3,7,0.12);
+    } else if (val < cutoffs[4]) {
+        bl->type=t;
+        change_weights(weights,4,7,0.12);
+    } else if (val < cutoffs[5]) {
+        bl->type=s;
+        change_weights(weights,5,7,0.12);
+    } else {
+        bl->type=t;
+        change_weights(weights,6,7,0.12);
+    }
+}
+
+void change_weights(double arr[7], int index, int dimension, float value) {
+    for (int i=0;i<dimension;i++) {
+        if (i==index) {
+            arr[i]-=value;
+            if (arr[i]<0) {
+                for (int j=0;j<dimension;j++) {
+                    arr[j]=1;
+                }
+                break;
+            }
+        }
+        else arr[i]+=(value/6);
+    }
+
 }
 
 void init_completed_blocks(struct screen_options *sco, struct blocks_state *bls) {

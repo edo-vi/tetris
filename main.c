@@ -23,7 +23,7 @@ void *move_block_down_periodically(void *arg) {
     struct timespec time_to_sleep;
     struct timespec second_time;
     time_to_sleep.tv_sec = 0;
-    time_to_sleep.tv_nsec = (long) 800000000;
+    time_to_sleep.tv_nsec = (long) 800000000; //800000000
 
     while(1) {
 
@@ -45,6 +45,7 @@ int main(void) {
     pthread_t tid;
     pthread_create(&tid, NULL, &move_block_down_periodically, NULL);
     int ch;
+
     do {
 
         printf("\033c");
@@ -59,13 +60,13 @@ int main(void) {
 
         endwin();
 
-        if (ch==258) { //258
+        if (ch=='s' || ch==258) { //258
             must_delay_thread=1;
             move_active_block_down(&gs);
         }
-        else if (ch==261) { //261
+        else if (ch=='d' || ch==261) { //261
             move_active_block_right(&gs.sco, &gs.scs,&gs.bls);
-        } else if (ch==260) {//260
+        } else if (ch=='a' || ch==260) {//260
             move_active_block_left(&gs.sco, &gs.scs,&gs.bls);
         } else if (ch=='w' || ch==259) { //259
             must_delay_thread=1;
