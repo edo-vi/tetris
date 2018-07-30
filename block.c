@@ -9,7 +9,7 @@
 
 void generate_pseudo_random_type(struct block *bl);
 
-void change_weights(double arr[7], int index, int dimension, float value);
+void change_weights(double arr[7], int index, int dimension, double value);
 
 struct block* create_random_block(void) {
     struct block* randblock = malloc(sizeof(struct block));
@@ -18,52 +18,54 @@ struct block* create_random_block(void) {
     randblock->form=1;
     return randblock;
 }
-
-void generate_pseudo_random_type(struct block *bl) {
+void generate_pseudo_random_type(struct block* bl) {
     int static counter = 0;
     counter+=1;
-    int std = 4000;
-    int val=rand()%28000;
+
+    float val=(float)(rand()%32000)/32000;
 
     // l, j, i, square, t, s, z
-    static double weights[7] = {1,1,1,1,1,1,1};
-    static int cutoffs[7];
+    static double weights[7] = {(double)1/7,(double)1/7,(double)1/7,(double)1/7,(double)1/7,(double)1/7,(double)1/7,};
+    static double cutoffs[7];
 
-    cutoffs[0]=(int)(std*weights[1]);
+    cutoffs[0]=(weights[0]);
     for (int i = 1; i<7;i++) {
-        cutoffs[i]=(int)(std*weights[i])+cutoffs[i-1];
+        cutoffs[i]=weights[i]+cutoffs[i-1];
     }
+    double factor = (1.0/7)/5;
     if (val < cutoffs[0]) {
         bl->type=l;
-        change_weights(weights,0,7,0.12);
+        change_weights(weights,0,7,factor);
     } else if (val < cutoffs[1]) {
         bl->type=j;
-        change_weights(weights,1,7,0.12);
+        change_weights(weights,1,7,factor);
     } else if (val < cutoffs[2]) {
         bl->type=i;
-        change_weights(weights,2,7,0.12);
+        change_weights(weights,2,7,factor);
     } else if (val < cutoffs[3]) {
         bl->type=square;
-        change_weights(weights,3,7,0.12);
+        change_weights(weights,3,7,factor);
     } else if (val < cutoffs[4]) {
         bl->type=t;
-        change_weights(weights,4,7,0.12);
+        change_weights(weights,4,7,factor);
     } else if (val < cutoffs[5]) {
         bl->type=s;
-        change_weights(weights,5,7,0.12);
+        change_weights(weights,5,7,factor);
     } else {
-        bl->type=t;
-        change_weights(weights,6,7,0.12);
+        bl->type=z;
+        change_weights(weights,6,7,factor);
     }
+
 }
 
-void change_weights(double arr[7], int index, int dimension, float value) {
+void change_weights(double arr[7], int index, int dimension, double value) {
+
     for (int i=0;i<dimension;i++) {
         if (i==index) {
             arr[i]-=value;
             if (arr[i]<0) {
                 for (int j=0;j<dimension;j++) {
-                    arr[j]=1;
+                    arr[j]=1.0/7;
                 }
                 break;
             }
@@ -559,6 +561,7 @@ void end_active_block_life(struct blocks_state *bls, struct screen_options *sco,
 
 
 void free_active_block(struct active_block *acb) {
+
     free(acb->block);
     free(acb);
 }
