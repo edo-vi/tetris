@@ -19,8 +19,6 @@ struct block* create_random_block(void) {
     return randblock;
 }
 void generate_pseudo_random_type(struct block* bl) {
-    int static counter = 0;
-    counter+=1;
 
     float val=(float)(rand()%32000)/32000;
 
