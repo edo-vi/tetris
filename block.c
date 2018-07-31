@@ -9,7 +9,9 @@
 
 void generate_pseudo_random_type(struct block *bl);
 
-void change_weights(double arr[7], int index, int dimension, double factor);
+static void change_weights(double arr[7], int index, int dimension, double factor);
+
+static void shuffle(int arr[], int dimension, int check);
 
 struct block* create_random_block(void) {
     struct block* randblock = malloc(sizeof(struct block));
@@ -19,58 +21,62 @@ struct block* create_random_block(void) {
     return randblock;
 }
 void generate_pseudo_random_type(struct block* bl) {
-
-    float val=(float)(rand()%32000)/32000;
-
+    static int a = 0;
+    a++;
+    float val=(float)(rand()%32000)/32000; // random number from 0 to 1
+    int counter;
     // l, j, i, square, t, s, z
-    static double weights[7] = {(double)1/7,(double)1/7,(double)1/7,(double)1/7,(double)1/7,(double)1/7,(double)1/7,};
-    static double cutoffs[7];
+    static const double weights[7] = {0.20,0.16,0.16,0.12,0.12,0.12,0.12};
+    static int order[7] = {0,1,2,3,4,5,6};
+    static int boolCheck = 1;
 
-    cutoffs[0]=(weights[0]);
-    for (int i = 1; i<7;i++) {
-        cutoffs[i]=weights[i]+cutoffs[i-1];
+    shuffle(order, 7, boolCheck);
+    if (boolCheck==1) boolCheck=0;
+
+    // get the random block
+    for (int i = 0; i<7; i++) {
+        val-=weights[i];
+        if (val<=0) {
+            counter=i;
+            break;
+        }
     }
-    double factor = (1.0/7)/3+0.001; // (1/7)/3+0.001 so the third time is hit the chance is reset
-    if (val < cutoffs[0]) {
-        bl->type=l;
-        change_weights(weights,0,7,factor);
-    } else if (val < cutoffs[1]) {
-        bl->type=j;
-        change_weights(weights,1,7,factor);
-    } else if (val < cutoffs[2]) {
-        bl->type=i;
-        change_weights(weights,2,7,factor);
-    } else if (val < cutoffs[3]) {
-        bl->type=square;
-        change_weights(weights,3,7,factor);
-    } else if (val < cutoffs[4]) {
-        bl->type=t;
-        change_weights(weights,4,7,factor);
-    } else if (val < cutoffs[5]) {
-        bl->type=s;
-        change_weights(weights,5,7,factor);
-    } else {
-        bl->type=z;
-        change_weights(weights,6,7,factor);
+    switch(order[counter]) {
+        case 0:
+            bl->type=l; break;
+        case 1:
+            bl->type=j; break;
+        case 2:
+            bl->type=i; break;
+        case 3:
+            bl->type=square; break;
+        case 4:
+            bl->type=t; break;
+        case 5:
+            bl->type=s; break;
+        case 6:
+            bl->type=z; break;
+        default: bl->type = square;
     }
+    // now we must update the order list, putting the chosen block as last one and increasing position of
+    // all the blocks that were in a lower position
+    int tmp=order[counter];
+    for (int i = counter+1; i < 7; i++) {
+        order[i-1]=order[i];
+    }
+    order[6]=tmp;
 
 }
 
-void change_weights(double arr[7], int index, int dimension, double factor) {
-
-    for (int i=0;i<dimension;i++) {
-        if (i==index) {
-            arr[i]-=factor;
-            if (arr[i]<=0) {
-                for (int j=0;j<dimension;j++) {
-                    arr[j]=1.0/(dimension);
-                }
-                break;
-            }
-        }
-        else arr[i]+=(factor/(dimension-1));
+// simple yates shuffle
+void shuffle(int arr[], int dimension, int check) {
+    if (check==0) return;
+    for (int i = dimension-1; i>=0; i--) {
+        int random = rand()%(dimension-1);
+        int tmp = arr[random];
+        arr[random]=arr[i];
+        arr[i]=tmp;
     }
-
 }
 
 void init_completed_blocks(struct screen_options *sco, struct blocks_state *bls) {
