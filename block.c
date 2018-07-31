@@ -9,7 +9,7 @@
 
 void generate_pseudo_random_type(struct block *bl);
 
-void change_weights(double arr[7], int index, int dimension, double value);
+void change_weights(double arr[7], int index, int dimension, double factor);
 
 struct block* create_random_block(void) {
     struct block* randblock = malloc(sizeof(struct block));
@@ -30,7 +30,7 @@ void generate_pseudo_random_type(struct block* bl) {
     for (int i = 1; i<7;i++) {
         cutoffs[i]=weights[i]+cutoffs[i-1];
     }
-    double factor = (1.0/7)/5;
+    double factor = (1.0/7)/3+0.001; // (1/7)/3+0.001 so the third time is hit the chance is reset
     if (val < cutoffs[0]) {
         bl->type=l;
         change_weights(weights,0,7,factor);
@@ -56,19 +56,19 @@ void generate_pseudo_random_type(struct block* bl) {
 
 }
 
-void change_weights(double arr[7], int index, int dimension, double value) {
+void change_weights(double arr[7], int index, int dimension, double factor) {
 
     for (int i=0;i<dimension;i++) {
         if (i==index) {
-            arr[i]-=value;
-            if (arr[i]<0) {
+            arr[i]-=factor;
+            if (arr[i]<=0) {
                 for (int j=0;j<dimension;j++) {
-                    arr[j]=1.0/7;
+                    arr[j]=1.0/(dimension);
                 }
                 break;
             }
         }
-        else arr[i]+=(value/6);
+        else arr[i]+=(factor/(dimension-1));
     }
 
 }
