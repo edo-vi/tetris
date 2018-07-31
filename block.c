@@ -21,8 +21,7 @@ struct block* create_random_block(void) {
     return randblock;
 }
 void generate_pseudo_random_type(struct block* bl) {
-    static int a = 0;
-    a++;
+    
     float val=(float)(rand()%32000)/32000; // random number from 0 to 1
     int counter;
     // l, j, i, square, t, s, z
