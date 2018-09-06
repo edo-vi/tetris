@@ -76,7 +76,10 @@ int main(void) {
 
     } while(ch!=101 && gs.loss==0);
     printf("\033c");
-    if (gs.loss>0) printf("Hai perso\n");
+    if (gs.loss>0) printf("     Hai perso\n");
+    const char martini[5] = {	0xF0, 0x9F, 0x8E, 0xAE, '\0'};
+    printf("\n*********************************\n***          TETRIS           ***\n*********************************\n\n"
+           "by %s Edoardo Zorzi %s 06/09/2018\n\n", martini, martini);
     return 0;
 }
 

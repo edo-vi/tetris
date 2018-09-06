@@ -11,9 +11,11 @@
 void sort(int arr[4]);
 
 void start_game(struct game_state* gs) {
-    printf("\n********************************\n***          TETRIS          ***\n********************************\n\n"
+    const char martini[5] = {	0xF0, 0x9F, 0x8E, 0xAE, '\0'};
+    printf("\n*********************************\n***          TETRIS           ***\n*********************************\n\n"
+           "by %s Edoardo Zorzi %s 06/09/2018\n\n\n"
            " in ogni momento, premi 'e' per\n   uscire e le frecciette per\n       muovere i blocchi\n___________________"
-           "____________\n");
+           "____________\n", martini, martini);
     init_screen_tetris(&gs->sco,&gs->scs);
     init_board_state(&gs->sco,&gs->scs, &gs->bls);
     init_completed_blocks(&gs->sco, &gs->bls); //all zero here, obviously
