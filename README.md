@@ -1,10 +1,10 @@
-# Tetris
-Simple tetris game written in C, using Ncurses.
+# Falling blocks
+Simple game written in C, using Ncurses.
 To compile, use
 ```
-gcc -O3 game.c block.c screen.c main.c -lncurses -pthread -o tetris
+gcc -O3 game.c block.c screen.c main.c -lncurses -pthread -o falling_blocks
 ```
 and then 
 ```
-./tetris
+./falling_blocks
 ```
