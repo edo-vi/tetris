@@ -11,7 +11,7 @@
 void sort(int arr[4]);
 
 void start_game(struct game_state* gs) {
-    printf("\n********************************\n***          TETRIS          ***\n********************************\n\n"
+    printf("\n****************************\n***          Falling Blocks          ***\n****************************\n\n"
            " in ogni momento, premi 'e' per\n   uscire e le frecciette per\n       muovere i blocchi\n___________________"
            "____________\n");
     init_screen_tetris(&gs->sco,&gs->scs);
